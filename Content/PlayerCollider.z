@@ -1,0 +1,50 @@
+class PlayerCollider : ZilchComponent
+{
+    var LastTouchedBuilding : Cog;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+        Zero.Connect(this.Owner, Events.CollisionEnded, this.OnCollisionEnded);
+    }
+
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        if(event.OtherObject.Name == "Building")
+        {
+            //Console.WriteLine("Touching Building");
+            this.LastTouchedBuilding = event.OtherObject.FindChildByName("BuildingCenter");
+            this.Owner.Parent.PlayerController.NearBuilding = true;
+            
+        }
+        
+    }
+    
+    function OnCollisionEnded(event : CollisionEvent)
+    {
+        
+        if(event.OtherObject.Name == "Building")
+        {
+            //Console.WriteLine("Stopped Touching Building");
+            this.LastTouchedBuilding = null;
+            this.Owner.Parent.PlayerController.NearBuilding = false;
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.LastTouchedBuilding != null)
+        {
+            
+            var build = this.LastTouchedBuilding;
+            var player = this.Owner.Parent;
+            var distanceToBuilding = 0.0;
+            
+            distanceToBuilding = player.Transform.Translation.X -
+                            build.Transform.WorldTranslation.X;
+            distanceToBuilding += build.BuildingDamage.BuildingOffset;
+            this.Owner.Parent.PlayerController.DistanceFromClosestBuilding = distanceToBuilding;
+        }
+        
+    }
+}

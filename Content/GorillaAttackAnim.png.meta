@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "GorillaAttackAnim",
+		uint64 ResourceId = 5a4070a9a6fc6b14,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 325,
+		uint FrameSizeY = 403,
+		uint FrameCount = 62,
+		float FrameDelay = 0.00641025649,
+		float OriginX = 162.5,
+		float OriginY = 201.5,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "WalkAnimAlien",
+		uint64 ResourceId = 5a4dc1ad4c2420f9,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 312,
+		uint FrameSizeY = 215,
+		uint FrameCount = 25,
+		float FrameDelay = 0.0163934417,
+		float OriginX = 156,
+		float OriginY = 107.5,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

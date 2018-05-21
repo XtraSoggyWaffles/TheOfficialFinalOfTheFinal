@@ -1,0 +1,59 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "Plus50",
+	},
+	Archetyped = 
+	{
+		string Name = "5a40469f3e87424c:Plus50",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [0, 0, 0],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	SpriteText = 
+	{
+		bool Visible = true,
+		bool VisibilityCulling = true,
+		bool VisibilityEvents = true,
+		bool CastShadows = false,
+		Vec4 Color = [0, 1, 0.0399999619, 0],
+		BlendMode BlendMode = Alpha,
+		SpriteGeometryMode GeometryMode = ZPlane,
+		string SpriteLayer = "52ad5fa30d7fcd50:DefaultSpriteLayer",
+		string FontName = "4e7bac697bec55c5:Verdana",
+		uint FontSize = 150,
+		string Text = "+50",
+		TextAlign Align = Center,
+		float PixelsPerUnit = 54,
+		bool Smoothing = true,
+	},
+	ScoreFadeAndOut = 
+	{
+	},
+	TimedDeath = 
+	{
+		float Lifetime = 3,
+		bool SendsDeathEvent = true,
+		bool AutoDestroy = true,
+	},
+	RigidBody = 
+	{
+		bool Static = false,
+		bool Asleep = false,
+		bool Kinematic = false,
+		bool RotationLocked = false,
+		bool Mode2D = true,
+		bool AllowSleep = true,
+		bool Inherit2DMode = true,
+		Vec3 Velocity = [0, 30, 0],
+		Vec3 AngularVelocity = [0, 0, 0],
+	},
+},

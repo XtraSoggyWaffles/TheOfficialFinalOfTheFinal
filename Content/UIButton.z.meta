@@ -1,0 +1,15 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "UIButton",
+		uint64 ResourceId = 5a0d3a5eb3cd6d84,
+	},
+	ContentTags = 
+	{
+		Array Tags = 
+		[
+			"ProjectFun_UIComponents",
+		],
+	},
+},

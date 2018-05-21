@@ -1,0 +1,176 @@
+class AI_Controller : ZilchComponent
+{
+    
+     // Pacing Properties and variables
+    [Property]
+    var PaceSpeed: Real = 5.0;
+    [Property]
+    var MaxMoveDistance: Real = 10.0;
+    var PaceDirection: Real3 = Real3(1.0, 0.0, 0.0);
+    var StartPosition: Real3 = Real3();
+
+    // Chasing Properties and variables
+    [Property]
+    var TargetObject: CogPath = null;
+    [Property]
+    var TargetObject2: CogPath = null;
+    [Property]
+    var ChaseSpeed: Real = 5.0;
+    var ChaseTriggerDistance: Real = 12;
+    var DistanceFromTarget1: Real = 0.0;
+    var DistanceFromTarget2: Real = 0.0;
+    var ChaseDirection1: Real3 = Real3(1.0, 0.0, 0.0);
+    var ChaseDirection2: Real3 = Real3(1.0, 0.0, 0.0);
+    var ChaseColor:Real4 = Real4(1.0, 0.0, 0.0, 1.0);
+    var TargetIsWithinRange: Boolean = false;
+    var Target2IsWithinRange: Boolean = false;
+    
+    var CurrentTarget : Cog;
+    var PlayerOneAlive : Boolean = true;
+    var PlayerTwoAlive : Boolean = true;
+    
+    // Shooting Properties
+    [Property]
+    var ShootDelay: Real = 1.0;
+    var NextShot: Real = 0.0;
+
+    // Variables for smoothing state transitions
+    var OriginalColor: Real4 = Real4();
+
+    // Dependencies
+    [Dependency]
+    var Transform: Transform = null;
+    //[Dependency]
+    //var Sprite: Sprite = null;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        //We need to update the enemy's behavior every logic update
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        //Have to know where we started to know how far we've moved
+        this.StartPosition = this.Owner.Transform.Translation;
+        this.OriginalColor = this.Owner.Sprite.Color;
+        Zero.Connect(this.Space, Events.PlayerOneDeath , this.OnPlayerOneDeath);
+        Zero.Connect(this.Space, Events.PlayerTwoDeath, this.OnPlayerTwoDeath);
+        
+    }
+
+    function OnPlayerOneDeath(event : ZilchEvent)
+    {
+        this.PlayerOneAlive = false;
+    }
+    
+    function OnPlayerTwoDeath(event : ZilchEvent)
+    {
+        this.PlayerTwoAlive = false;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        
+        // Reevaluate the situation to determine if our object should pursue
+        this.TargetIsWithinRange = false;
+
+        // If our target exists
+        if (this.TargetObject.Cog != null)
+        {
+            // Calculate the direction and distance of target
+            this.CalculateChaseDirectionAndDistance();
+            // Evaluate whether Ai should chase or pace
+            if(this.PlayerOneAlive)
+            {
+                this.TargetIsWithinRange = (this.DistanceFromTarget1 <= this.ChaseTriggerDistance);
+            }
+            else
+            {
+                this.TargetIsWithinRange = false;
+            }
+            if(this.PlayerTwoAlive)
+            {
+                this.Target2IsWithinRange = (this.DistanceFromTarget2 <= this.ChaseTriggerDistance);
+            }
+            else
+            {
+                this.Target2IsWithinRange = false;
+            }
+
+            if (this.TargetIsWithinRange || this.Target2IsWithinRange)
+            {
+                //shoot target
+                this.ShootAtTarget(event);
+            }
+            else // If target not in range
+            {
+                // Pace back and forth
+            }
+        }
+        else // if there is no target, pace
+        {
+            // Logic for pacing back and forth
+        }
+}
+    
+    function CalculateChaseDirectionAndDistance()
+    {
+        // Get direction toward target
+        this.ChaseDirection1 = this.TargetObject.Cog.Transform.Translation - this.Owner.Transform.Translation;
+        this.ChaseDirection2 = this.TargetObject2.Cog.Transform.Translation - this.Owner.Transform.Translation;
+        // Extract distance by finding magnitude
+        this.DistanceFromTarget1 = Math.Length(this.ChaseDirection1);
+        this.DistanceFromTarget2 = Math.Length(this.ChaseDirection2);
+        // Extract direction by normalizing
+        this.ChaseDirection1 = Math.Normalize(this.ChaseDirection1);
+        this.ChaseDirection2 = Math.Normalize(this.ChaseDirection2);
+    }
+    
+    
+    function ShootAtTarget(event: UpdateEvent)
+    {
+        if(event.TimePassed > this.NextShot)
+        {
+            
+            //Update next shot timer
+            this.NextShot = event.TimePassed + this.ShootDelay;
+        
+            // Create a projectile originating from the enemy's position
+            var projectileObject = this.Space.CreateAtPosition(Archetype.Find("Projectile"), this.Owner.Transform.Translation);
+            if (projectileObject != null)
+            {
+                // Shoot in the direction of the target (which is the same as the chase Direction)
+                if(this.TargetIsWithinRange && this.Target2IsWithinRange)
+                {
+                    var bool = this.CoinFlip();
+                    if(bool)
+                    {
+                        projectileObject.Projectile.Direction = this.ChaseDirection1;
+                    }
+                    
+                    else if(!bool)
+                    {
+                        projectileObject.Projectile.Direction = this.ChaseDirection2;
+                    }
+                }
+                else if(this.TargetIsWithinRange)
+                {
+                    projectileObject.Projectile.Direction = this.ChaseDirection1;
+                }
+                else if(this.Target2IsWithinRange)
+                {
+                    projectileObject.Projectile.Direction = this.ChaseDirection2;
+                }
+                // Make sure projectile moves faster than the enemy
+                projectileObject.Projectile.Speed = 15.0 + this.ChaseSpeed;
+            }
+            
+        }
+    }
+    
+    function CoinFlip() : Boolean
+    {
+        var randGen = Random();
+        
+        return randGen.CoinFlip();
+    }
+
+}

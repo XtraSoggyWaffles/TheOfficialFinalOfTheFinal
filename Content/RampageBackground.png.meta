@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "RampageBackground",
+		uint64 ResourceId = 5a66198f78776c37,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 300,
+		uint FrameSizeY = 300,
+		uint FrameCount = 4,
+		float FrameDelay = 0.0833333358,
+		float OriginX = 150,
+		float OriginY = 150,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

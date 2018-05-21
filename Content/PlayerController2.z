@@ -1,0 +1,126 @@
+class PlayerController2 : ZilchComponent
+{
+    var NearBuilding : Boolean = false;
+    var DistanceFromClosestBuilding : Real = 0;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+
+
+   function OnLogicUpdate(event : UpdateEvent)
+{
+    if(this.NearBuilding && !Zero.Keyboard.KeyIsPressed(Keys.Right)
+    && !Zero.Keyboard.KeyIsPressed(Keys.Left))
+    {
+        this.Owner.SweptController.MaxFallSpeed = 0.0;
+        
+    }
+    
+    else if(!this.NearBuilding && !Zero.Keyboard.KeyIsPressed(Keys.Right)
+    && !Zero.Keyboard.KeyIsPressed(Keys.Left))
+    {
+        this.Owner.SweptController.Gravity = 10;
+        this.Owner.SweptController.MaxFallSpeed = 50.0;
+        
+    }
+  var movement = Real3(0.0, 0.0, 0.0);
+
+  // control left, right, and up
+  if(Zero.Keyboard.KeyIsDown(Keys.Left))
+  {
+    if(this.NearBuilding && this.DistanceFromClosestBuilding > 0)
+      {
+          //this.Owner.SweptController.Gravity = 0;
+          //movement.Y += 5.0;
+      }
+      else if(this.NearBuilding && this.DistanceFromClosestBuilding < 0)
+      {
+          this.Owner.SweptController.Gravity = 10;
+          this.Owner.SweptController.MaxFallSpeed = 50.0;
+          movement.X -= 1.0;
+      }
+      else if(!this.NearBuilding)
+      {
+          this.Owner.SweptController.Gravity = 10;
+          this.Owner.SweptController.MaxFallSpeed = 50.0;
+          movement.X -= 1.0;
+      }
+      
+      if(Zero.Keyboard.KeyIsDown(Keys.W))
+      {
+          this.Owner.Transform.Translation += Real3(0,5,0) * event.Dt;
+          if(this.Owner.Sprite.SpriteSource != SpriteSource.AlienClimbAnimation && this.Owner.Sprite.SpriteSource != SpriteSource.Circle)
+          {
+              this.Owner.Sprite.SpriteSource = SpriteSource.AlienClimbAnimation;
+          }
+      }
+      else if(Zero.Keyboard.KeyIsDown(Keys.S))
+      {
+          this.Owner.Transform.Translation -= Real3(0,5,0) * event.Dt;
+          if(this.Owner.Sprite.SpriteSource != SpriteSource.AlienClimbAnimation && this.Owner.Sprite.SpriteSource != SpriteSource.Circle)
+          {
+              this.Owner.Sprite.SpriteSource = SpriteSource.AlienClimbAnimation;
+          }
+      }
+  }
+
+  if(Zero.Keyboard.KeyIsDown(Keys.Right))
+  {
+      if(this.NearBuilding && this.DistanceFromClosestBuilding < 0)
+      {
+          //this.Owner.SweptController.Gravity = 0;
+          //movement.Y += 5.0;
+      }
+      else if(this.NearBuilding && this.DistanceFromClosestBuilding > 0)
+      {
+          this.Owner.SweptController.Gravity = 10;
+          this.Owner.SweptController.MaxFallSpeed = 50.0;
+          movement.X += 1.0;
+      }
+      else if(!this.NearBuilding)
+      {
+          this.Owner.SweptController.Gravity = 10;
+          this.Owner.SweptController.MaxFallSpeed = 50.0;
+          movement.X += 1.0;
+      }
+      
+      if(Zero.Keyboard.KeyIsDown(Keys.W))
+      {
+          this.Owner.Transform.Translation += Real3(0,5,0) * event.Dt;
+          if(this.Owner.Sprite.SpriteSource != SpriteSource.AlienClimbAnimation && this.Owner.Sprite.SpriteSource != SpriteSource.Circle)
+          {
+              this.Owner.Sprite.SpriteSource = SpriteSource.AlienClimbAnimation;
+          }
+      }
+      else if(Zero.Keyboard.KeyIsDown(Keys.S))
+      {
+          this.Owner.Transform.Translation -= Real3(0,5,0) * event.Dt;
+          if(this.Owner.Sprite.SpriteSource != SpriteSource.AlienClimbAnimation && this.Owner.Sprite.SpriteSource != SpriteSource.Circle)
+          {
+              this.Owner.Sprite.SpriteSource = SpriteSource.AlienClimbAnimation;
+          }
+      }
+    
+  }
+
+  if(Zero.Keyboard.KeyIsPressed(Keys.Space))
+  {
+    this.Owner.SweptController.Jump();
+  }
+
+  // if the jump key is not pressed, find the point of release and stop jumping
+  if(Zero.Keyboard.KeyIsDown(Keys.Up) == false)
+  {
+    if(this.Owner.SweptController.Jumping)
+    {
+      this.Owner.SweptController.JumpCancel();
+    }
+  }
+
+  // at the end, update
+  this.Owner.SweptController.Update(movement, event.Dt);
+ }
+}

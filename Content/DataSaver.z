@@ -1,0 +1,15 @@
+class DataSaver : ZilchComponent
+{
+    [Serialized]
+    var PlayerOneScore : Integer = 0;
+    [Serialized]
+    var PlayerTwoScore : Integer = 0;
+    [Serialized]
+    var Time : Real = 0;
+    [Serialized]
+    var HighScore : Real = 0;
+    [Serialized]
+    var UseController : Boolean = false;
+    [Serialized]
+    var HighScoreName : String = "";
+}

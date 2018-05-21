@@ -1,0 +1,5 @@
+class SpaceScore : ZilchComponent
+{
+    var Score : Integer = 0;
+    var Score2 : Integer = 0;
+}

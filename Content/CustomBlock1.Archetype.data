@@ -1,0 +1,25 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "CustomBlock1",
+	},
+	Archetyped = 
+	{
+		string Name = "5a45a2c46bae6f50:CustomBlock1",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [0, 0, 0],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	BlockDestructionTest = 
+	{
+		Vec4 WithinRangeColor = [0, 0, 0, 0],
+	},
+},

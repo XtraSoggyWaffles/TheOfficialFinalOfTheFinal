@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "DinoMoveLeft",
+		uint64 ResourceId = 5a0e96dffeee1ddd,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 100,
+		uint FrameSizeY = 73,
+		uint FrameCount = 6,
+		float FrameDelay = 0.25,
+		float OriginX = 50,
+		float OriginY = 36.5,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

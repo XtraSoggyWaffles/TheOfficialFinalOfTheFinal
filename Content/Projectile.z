@@ -1,0 +1,20 @@
+class Projectile : ZilchComponent
+{
+    [Property]
+    var Speed: Real = 2.0;
+    
+    [Property]
+    var Direction: Real3 = Real3();
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Console.WriteLine("Hey Dad, Lets play catch");
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        //apply movement
+        this.Owner.Transform.Translation += this.Direction * event.Dt * this.Speed;
+    }
+}

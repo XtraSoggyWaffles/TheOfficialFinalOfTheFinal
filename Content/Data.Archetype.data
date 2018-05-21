@@ -1,0 +1,29 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "Data",
+	},
+	Archetyped = 
+	{
+		string Name = "5a6b7e9e056e5964:Data",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [-26.8400764, -10.1354399, -1.21144058e-06],
+		Vec3 Scale = [1, 1, 1],
+		Quat Rotation = [0, 0, 0, 1],
+	},
+	DataSaver = 
+	{
+		int Score = 0,
+		float Time = 0,
+		float HighScore = 0,
+		bool UseController = false,
+		string HighScoreName = "",
+	},
+},

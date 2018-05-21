@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "GorillaClimbAnim",
+		uint64 ResourceId = 5a4071609c3de58b,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 236,
+		uint FrameSizeY = 362,
+		uint FrameCount = 62,
+		float FrameDelay = 0.010416667,
+		float OriginX = 118,
+		float OriginY = 181,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

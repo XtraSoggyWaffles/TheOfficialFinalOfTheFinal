@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "PersistantSound",
+		uint64 ResourceId = 5a49a8accb85ee9c,
+	},
+},

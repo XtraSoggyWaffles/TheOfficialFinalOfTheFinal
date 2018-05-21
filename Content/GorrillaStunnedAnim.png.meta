@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "GorrillaStunnedAnim",
+		uint64 ResourceId = 5bb579291a3b29f2,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 215,
+		uint FrameSizeY = 364,
+		uint FrameCount = 62,
+		float FrameDelay = 0.010416667,
+		float OriginX = 107.5,
+		float OriginY = 182,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

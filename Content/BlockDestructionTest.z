@@ -1,0 +1,158 @@
+class BlockDestructionTest : ZilchComponent
+{
+    [Property]
+    var WithinRangeColor: Real4;
+    var OriginalColor: Real4;
+    
+    [Property]
+    var OneHitSprite : SpriteSource;
+    [Property]
+    var TwoHitSprite : SpriteSource;
+    
+    var HitsTaken : Real = 0;
+    var PlayerHitKey : Keys;
+    
+    var PlayerIsWithinRange : Boolean = false;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        this.OriginalColor = this.Owner.Sprite.Color;
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+        Zero.Connect(this.Owner, Events.CollisionEnded, this.OnCollisionEnded);
+    }
+
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        //Console.WriteLine("Something Collided with me");
+        if(event.OtherObject.Name == "PlayerSwingRange")
+        {
+            this.Owner.Sprite.Color = this.WithinRangeColor;
+            this.PlayerIsWithinRange = true;
+            this.PlayerHitKey = event.OtherObject.Parent.PlayerController.KeyAttack;
+        }
+    }
+
+    function OnCollisionEnded(event : CollisionEvent)
+    {
+        //Console.WriteLine("Something stopped Colliding with me");
+        if(event.OtherObject.Name == "PlayerSwingRange")
+        {
+            this.Owner.Sprite.Color = this.OriginalColor;
+            this.PlayerIsWithinRange = false;
+            this.PlayerHitKey = Keys.NumPad0;
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.PlayerIsWithinRange && Zero.Keyboard.KeyIsPressed(this.PlayerHitKey) && 
+        this.HitsTaken < 3)
+        {
+            this.HitsTaken += 1;
+            if(this.HitsTaken == 1)
+            {
+                var my25 = this.Space.CreateAtPosition(Archetype.Find("Pluse25"), this.Owner.Transform.Translation);
+                var guideArray = new Array[Cog]();
+                for(var i = 0; i < this.RandNum(1, 3); i+=1)
+                {
+                    var parTrans = this.Owner.Transform.Translation;
+                    var newTrans = Real3(parTrans.X + this.RandNum(0.1, 1.0), parTrans.Y + this.RandNum(0.1, 1.0), parTrans.Z);
+                    var shard = this.Space.CreateAtPosition(Archetype.Find("GlassShard"), newTrans);
+                    guideArray.Add(shard);
+                }
+                
+                if(this.Owner.Name.Contains("L"))
+                {
+                    my25.RigidBody.Velocity +=  Real3(-15.0, 0.0, 0.0);
+                    foreach(var shard in guideArray)
+                    {
+                        shard.RigidBody.Velocity += Real3(-this.RandNum(5, 25), this.RandNum(1, 4), 0.0);
+                    }
+                    
+                }
+                
+                else if(this.Owner.Name.Contains("R"))
+                {
+                    my25.RigidBody.Velocity +=  Real3(15.0, 0.0, 0.0);
+                    foreach(var shard in guideArray)
+                    {
+                        shard.RigidBody.Velocity += Real3(this.RandNum(5, 25), this.RandNum(1, 4), 0.0);
+                    }
+                }
+                if(this.PlayerHitKey == Keys.E)
+                {
+                    this.Space.FindObjectByName("Score1").Score.Score += 25;
+                }
+                else if(this.PlayerHitKey == Keys.O)
+                {
+                    this.Space.FindObjectByName("Score2").Score.Score += 25;
+                }
+                this.Owner.Sprite.SpriteSource = this.OneHitSprite;
+            }
+            else if(this.HitsTaken == 2)
+            {
+                var my50 = this.Space.CreateAtPosition(Archetype.Find("Plus50"), this.Owner.Transform.Translation);
+                var guideArray = new Array[Cog]();
+                for(var i = 0; i < this.RandNum(1, 3); i+=1)
+                {
+                    var parTrans = this.Owner.Transform.Translation;
+                    var newTrans = Real3(parTrans.X + this.RandNum(0.1, 1.0), parTrans.Y + this.RandNum(0.1, 1.0), parTrans.Z);
+                    var myPebble = this.Space.CreateAtPosition(Archetype.Find("Pebble"), newTrans);
+                    guideArray.Add(myPebble);
+                }
+                
+                if(this.Owner.Name.Contains("L"))
+                {
+                    my50.RigidBody.Velocity +=  Real3(-15.0, 0.0, 0.0);
+                    foreach(var shard in guideArray)
+                    {
+                        shard.RigidBody.Velocity += Real3(-this.RandNum(5, 25), this.RandNum(1, 4), 0.0);
+                    }
+                }
+                
+                else if(this.Owner.Name.Contains("R"))
+                {
+                    my50.RigidBody.Velocity +=  Real3(15.0, 0.0, 0.0);
+                    foreach(var shard in guideArray)
+                    {
+                        shard.RigidBody.Velocity += Real3(this.RandNum(5, 25), this.RandNum(1, 4), 0.0);
+                    }
+                }
+                if(this.PlayerHitKey == Keys.E)
+                {
+                    this.Space.FindObjectByName("Score1").Score.Score += 50;
+                }
+                else if(this.PlayerHitKey == Keys.O)
+                {
+                    this.Space.FindObjectByName("Score2").Score.Score += 50;
+                }
+                this.Owner.Sprite.SpriteSource = this.TwoHitSprite;
+            }
+        }
+        
+    }
+    
+    function BlockUpdate()
+    {
+        if(this.HitsTaken == 2)
+        {
+            this.Owner.Sprite.SpriteSource = this.TwoHitSprite;
+        }
+    }
+    
+    function RandNum(min : Integer, max : Integer) : Real
+    {
+        var randGen = new Random();
+        var randNum = randGen.Range(min, max);
+        return randNum;
+    }
+    
+    function RandNum(min : Real, max : Real) : Real
+    {
+        var randGen = new Random();
+        var randNum = randGen.Range(min, max);
+        return randNum;
+    }
+}

@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "AlienClimbAttack",
+		uint64 ResourceId = 5a47167e23ddeff9,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 275,
+		uint FrameSizeY = 255,
+		uint FrameCount = 62,
+		float FrameDelay = 0.00280898879,
+		float OriginX = 137.5,
+		float OriginY = 127.5,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

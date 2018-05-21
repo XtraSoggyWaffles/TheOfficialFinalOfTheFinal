@@ -1,0 +1,7 @@
+ContentLibrary = 
+{
+	string Name = "Arcade Game(Rampage)",
+	uint64 LibraryId = 5a17cc8963e6b3c0,
+	string SourceControlType = "",
+	bool ReadOnly = false,
+},

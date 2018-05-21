@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "MenuBackgroundAnimation",
+		uint64 ResourceId = 5a53e3d9d2a00a63,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 128,
+		uint FrameSizeY = 128,
+		uint FrameCount = 5,
+		float FrameDelay = 0.333333343,
+		float OriginX = 64,
+		float OriginY = 64,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

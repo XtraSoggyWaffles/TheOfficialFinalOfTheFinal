@@ -1,0 +1,39 @@
+class Score : ZilchComponent
+{
+    [Property]
+    var Player : Integer = 0; 
+    
+    var DataCog : Cog = null;
+    
+    var Score : Integer = 0;
+    
+    var Timer : Cog = null;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        
+        this.Timer = this.Space.FindObjectByName("Time");
+        
+        this.DataCog = Zero.ObjectStore.RestoreOrArchetype("Data", Archetype.Data, this.Space);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        this.Owner.SpriteText.Text = "Score: `this.Score`";
+        
+        if(this.Player == 1)
+        {
+            this.DataCog.DataSaver.PlayerOneScore = this.Score;
+            this.Space.SpaceScore.Score = this.Score;
+        }
+        
+        else if(this.Player == 2)
+        {
+            this.DataCog.DataSaver.PlayerTwoScore = this.Score;
+            this.Space.SpaceScore.Score2 = this.Score;
+        }
+        
+        //this.DataCog.DataSaver.Time = Math.Round(this.Timer.Time.Time);
+        Zero.ObjectStore.Store("Data", this.DataCog);
+    }
+}

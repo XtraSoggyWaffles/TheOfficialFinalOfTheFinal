@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "BGAnim1",
+		uint64 ResourceId = 5a431785a58cd048,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 500,
+		uint FrameSizeY = 400,
+		uint FrameCount = 6,
+		float FrameDelay = 0.200000003,
+		float OriginX = 250,
+		float OriginY = 200,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

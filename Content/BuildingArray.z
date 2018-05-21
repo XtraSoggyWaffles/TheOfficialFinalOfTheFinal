@@ -1,0 +1,204 @@
+class Utility
+{
+    [Static]
+    function UnParent(arr : Array[Cog])
+    {
+        foreach(var member in arr)
+        {
+            member.DetachRelative();
+        }
+    }
+    
+    [Static]
+    function PrintChildren(arr : Array[Cog])
+    {
+        for(var i = 0; i < arr.Count; i+=1)
+        {
+            Console.WriteLine(" `i + 1` : `arr[i].Name`");
+        }
+        Console.WriteLine("Total children: `arr.Count`");
+    }
+    
+    [Static]
+    function DestoryChildren(arr : Array[Cog])
+    {
+        foreach(var member in arr)
+        {
+            if(member != null)
+            {
+                member.Destroy();
+            }
+        }
+    }
+    
+    [Static]
+    function CheckBuildingStatus(arr : Array[Cog])
+    {
+        var totalMembers = arr.Count;
+        var damagedMembers = 0.0;
+        foreach(var member in arr)
+        {
+            if(member != null)
+            {
+                if(member.BlockDestructionTest != null && 
+                member.BlockDestructionTest.HitsTaken > 0)
+                {
+                    damagedMembers += 1.0;
+                }
+                else if(member.BlockDestructionTest != null && 
+                member.BlockDestructionTest.HitsTaken > 1)
+                {
+                    damagedMembers += 1.0;
+                }
+                else if(member.BlockDestructionTest == null)
+                {
+                    totalMembers -= 1;
+                }
+            }  
+        }
+        var integrity = 100.0;
+        integrity -= (damagedMembers / totalMembers)*100.0;
+        integrity = Math.Round(integrity, 0);
+        //Console.WriteLine("Building Integrity : `integrity`%");
+        if(integrity < 50)
+        {
+            foreach(var member in arr)
+            {
+                if(member != null && member.Name == "Building")
+                { 
+                    member.BuildingArray.StartDestructionPhase(arr);
+                }
+            }
+        }
+    }
+    
+}
+
+
+
+class BuildingArray : ZilchComponent
+{
+    var BuildingArray : Array[Cog];
+    [Property]
+    var DestroyRate : Real = 0.5;
+    [Property]
+    var DestroyAllChildren : Boolean = true;
+    var CurrentFloor : Integer = 1;
+    var Sent : Real = 0;
+    var ImFalling : Boolean = false;
+    
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        if(this.Owner.Children != null)
+        {
+            var pieceArray = new Array[Cog]();
+            var children = this.Owner.Children;
+            foreach(var child in children)
+            {
+                pieceArray.Add(child);
+            }
+            pieceArray.Add(this.Owner);
+            this.BuildingArray = pieceArray;
+            Utility.UnParent(this.BuildingArray);
+            //Utility.DestoryChildren(this.BuildingArray);
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(Zero.Keyboard.KeyIsPressed(Keys.E) || Zero.Keyboard.KeyIsPressed(Keys.O))
+        {
+            Utility.CheckBuildingStatus(this.BuildingArray);
+        }
+        
+    }
+    
+    function StartDestructionPhase(arr : Array[Cog])
+    {
+        
+        var seq = Actions.Sequence(this.Owner.Actions);
+        this.ImFalling = true;
+        var groupCount = arr.Count - 1;
+        for(var i = 1; i <= groupCount/2; i+=1)
+        {
+            //Console.WriteLine(seq);
+            Actions.Delay(seq, this.DestroyRate);
+            Actions.Call(seq, this.DestroySection);
+            //Actions.Delay(seq, this.DestroyRate);
+            //Console.WriteLine(seq);
+        }
+    }
+    
+    function DestroySection()
+    {
+        //Console.WriteLine("KACHOW");
+        foreach(var sec in this.BuildingArray)
+        {
+            if(sec != null && sec.BlockDestructionTest != null && sec.Name.Contains("`this.CurrentFloor`"))
+            {
+                //Console.WriteLine("Destroyed: `sec.Name`");
+                sec.Destroy();
+                if(this.CurrentFloor == 1 && this.Sent < 1)
+                {
+                    Console.WriteLine("PARTICLE CREATED");
+                    var newtransform = Real3(sec.Transform.Translation.X + 2.0, sec.Transform.Translation.Y - 3.0, 1.0);
+                    this.Space.CreateAtPosition(Archetype.Find("FellingParticle"), newtransform);
+                    newtransform = Real3(sec.Transform.Translation.X + 2.0, sec.Transform.Translation.Y + 1.5, 0.0);
+                    this.Space.CreateAtPosition(Archetype.Find("Rubble"), newtransform);
+                    
+                    this.Sent += 1;
+                }
+                
+            }
+            
+        }
+        
+        foreach(var sec in this.BuildingArray)
+        {
+            if(sec != null)
+            {
+                sec.Transform.Translation -= Real3(0.0, 5.0, 0.0);
+            }
+         }
+        this.CurrentFloor += 1;
+        if(this.CurrentFloor == 9)
+        {
+            if(this.Space.FindObjectByName("FP") != null)
+            {
+                var seq = Actions.Sequence(this.Owner.Actions);
+                Actions.Delay(seq, 1.5);
+                Actions.Call(seq, this.StopParticles);
+            }
+        }
+    }
+    
+    function StopParticles()
+    {
+        if(this.Owner.FindChildByName("BuildingTop") != null)
+        {
+            this.Owner.FindChildByName("BuildingTop").Destroy();
+        }
+        if(this.Space.FindObjectByName("FP") != null)
+            {
+                this.Space.FindObjectByName("FP").BoxParticleEmitter.Active = false;
+                var seq = Actions.Sequence(this.Owner.Actions);
+                Actions.Delay(seq, 3.0);
+                Actions.Call(seq, this.DestroyParticles);
+            }
+    }
+    
+    function DestroyParticles()
+    {
+        if(this.Space.FindObjectByName("FP") != null)
+        {
+            this.Space.FindObjectByName("FP").Destroy();
+            this.Owner.Destroy();
+            if(this.DestroyAllChildren)
+            {
+                Utility.DestoryChildren(this.BuildingArray);
+            }
+        }
+    }
+    
+}

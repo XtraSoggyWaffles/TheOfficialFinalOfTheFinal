@@ -1,0 +1,136 @@
+class FinalScore : ZilchComponent
+{
+    
+    var DataCog : Cog = null;
+    var Controller : Gamepad = null;
+    [Property]
+    var ScoreText : CogPath = null;
+    [Property]
+    var TimeText : CogPath = null;
+    [Property]
+    var HighScore : CogPath = null;
+    [Property]
+    var NewHighScore : CogPath = null;
+    [Property]
+    var NameEntry : CogPath = null;
+    [Property]
+    var Player : Integer = 0;
+    
+    var FinalScore : Real;
+    
+    var AsciiVal : Integer = 65;
+    var Name : String = "";
+    var NameEntered : Boolean = true;
+    
+    function Initialize(init : CogInitializer)
+    {
+        
+        this.Controller = Zero.Gamepads.GetGamePad(0);
+        this.DataCog = Zero.ObjectStore.RestoreOrArchetype("Data", Archetype.Data, this.Space);
+        if(this.Player == 1)
+        {
+            this.ScoreText.Cog.SpriteText.Text = "Score: `this.DataCog.DataSaver.PlayerOneScore`";
+        }
+        else if(this.Player == 2)
+        {
+            this.ScoreText.Cog.SpriteText.Text = "Score: `this.DataCog.DataSaver.PlayerTwoScore`";
+        }
+        this.TimeText.Cog.SpriteText.Text = "Time Remaining: `this.DataCog.DataSaver.Time`";
+        if(this.Player == 1)
+        {
+            this.FinalScore = this.DataCog.DataSaver.PlayerOneScore + this.DataCog.DataSaver.Time;
+        }
+        else if(this.Player == 2)
+        {
+            this.FinalScore = this.DataCog.DataSaver.PlayerTwoScore + this.DataCog.DataSaver.Time;
+        }
+        this.Owner.SpriteText.Text = "Final Score: `this.FinalScore`";
+        if(this.FinalScore > this.DataCog.DataSaver.HighScore)
+        {
+            this.DataCog.DataSaver.HighScore = this.FinalScore;
+            this.NewHighScore.Cog.SpriteText.Visible = true;
+            this.NameEntered = false;
+            this.NameEntry.Cog.SpriteText.Visible = true;
+            
+        }
+        this.HighScore.Cog.SpriteText.Text = "`this.DataCog.DataSaver.HighScoreName` : `this.DataCog.DataSaver.HighScore`";
+        Zero.ObjectStore.Store("Data", this.DataCog);
+        
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Controller, Events.GamepadStickFlicked, this.OnGamepadStickFlicked);
+        
+    }
+
+    function OnGamepadStickFlicked(event : GamepadEvent)
+    {
+        if(event.FlickedStick == 1 && event.FlickDirection.Y > 0.5 && this.NameEntry.Cog != null)
+        {
+            this.CycleUp();
+        }
+        else if(event.FlickedStick == 1 && event.FlickDirection.Y < -0.5 && this.NameEntry.Cog != null)
+        {
+            this.CycleDown();
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if((Zero.Keyboard.KeyIsPressed(Keys.Enter) || this.Controller.IsButtonPressed(Buttons.A)) && this.NameEntered)
+        {
+            this.Space.LoadLevel(Level.MenuScreen);
+        }
+        
+        if(this.NameEntry.Cog != null)
+        {
+            this.CycleLetters();
+            this.NameEntry.Cog.SpriteText.Text = "Enter Name: `String.FromChar(this.AsciiVal)`";
+        }
+        
+    }
+    
+    function CycleLetters()
+    {
+        if((Zero.Keyboard.KeyIsPressed(Keys.Down) || Zero.Keyboard.KeyIsPressed(Keys.S) ||
+            this.Controller.IsButtonPressed(Buttons.DpadDown)) && this.NameEntry.Cog.SpriteText.Visible)
+        {
+            this.CycleDown();
+        }
+        else if((Zero.Keyboard.KeyIsPressed(Keys.Up) || Zero.Keyboard.KeyIsPressed(Keys.W) || 
+            this.Controller.IsButtonPressed(Buttons.DpadUp)) && this.NameEntry.Cog.SpriteText.Visible)
+        {
+            this.CycleUp();
+        }
+        
+        if((Zero.Keyboard.KeyIsPressed(Keys.Space) || Zero.Keyboard.KeyIsPressed(Keys.Enter) || this.Controller.IsButtonPressed(Buttons.A) ) 
+            && this.NameEntry.Cog.SpriteText.Visible && !this.NameEntered)
+        {
+            this.Name = "`this.Name``String.FromChar(this.AsciiVal)`";
+            this.HighScore.Cog.SpriteText.Text = "`this.Name` : `this.DataCog.DataSaver.HighScore`";
+            if(this.Name.Count > 2)
+            {
+                this.NameEntered = true;
+                this.DataCog.DataSaver.HighScoreName = this.Name;
+                Zero.ObjectStore.Store("Data", this.DataCog);
+                this.NameEntry.Cog.Destroy();
+            }
+        }
+    }
+    
+    function CycleDown()
+    {
+        ++this.AsciiVal;
+        if(this.AsciiVal > 90)
+        {
+            this.AsciiVal = 65;
+        }
+    }
+    
+    function CycleUp()
+    {
+        --this.AsciiVal;
+        if(this.AsciiVal < 65)
+        {
+            this.AsciiVal = 90;
+        }
+    }
+}

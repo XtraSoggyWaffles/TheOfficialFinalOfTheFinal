@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "GorillaStillAnim",
+		uint64 ResourceId = 5a40708da31bdc24,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 155,
+		uint FrameSizeY = 311,
+		uint FrameCount = 62,
+		float FrameDelay = 0.010416667,
+		float OriginX = 77.5,
+		float OriginY = 155.5,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

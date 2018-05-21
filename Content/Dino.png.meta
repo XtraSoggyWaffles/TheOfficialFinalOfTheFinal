@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "Dino",
+		uint64 ResourceId = 5a0d28b203e31f53,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 100,
+		uint FrameSizeY = 73,
+		uint FrameCount = 1,
+		float FrameDelay = 0.0833333358,
+		float OriginX = 50,
+		float OriginY = 36,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = false,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

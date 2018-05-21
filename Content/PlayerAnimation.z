@@ -1,0 +1,343 @@
+class PlayerAnimation : ZilchComponent
+{
+    //Standing Still
+    [Property]
+    var Class : SpriteSource = null;
+    [Property]
+    var ClimbStill : SpriteSource = null;
+    //Moving Left
+    [Property]
+    var ClassWalkAnimation : SpriteSource = null;
+    //Jump Animation
+    [Property]
+    var ClassJump : SpriteSource = null;
+    //Attack animation
+    [Property]
+    var ClassAttack : SpriteSource = null;
+    [Property]
+    var ClimbAttack : SpriteSource = null;
+    [Property]
+    var ClimbAnim : SpriteSource = null;
+    [Property]
+    var StunnedAnim : SpriteSource = null;
+    [Property]
+    var PunchNoise : SoundCue = null;
+    
+    
+
+    var AttackAnimationActive : Boolean = false;
+    
+    var CurrentScale : Real3;
+    var CurrentCollide : Real3;
+    var CurrentTrans : Real3;
+    
+    var KeyLeft : Keys;
+    var KeyRight : Keys;
+    var KeyUp : Keys;
+    var KeyDown : Keys;
+    var KeyAttack : Keys;
+    var KeyStun : Keys;
+    
+    var Stunned : Boolean;
+    
+    var Controller : Integer;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        this.CurrentScale = this.Owner.Transform.Scale;
+        this.CurrentCollide = this.Owner.BoxCollider.Size;
+        this.KeyLeft = this.Owner.PlayerController.KeyLeft;
+        this.KeyRight = this.Owner.PlayerController.KeyRight;
+        this.KeyUp = this.Owner.PlayerController.KeyUp;
+        this.KeyDown = this.Owner.PlayerController.KeyDown;
+        this.KeyAttack = this.Owner.PlayerController.KeyAttack;
+        this.KeyStun = this.Owner.PlayerController.KeyStun;
+        this.Controller = this.Owner.PlayerController.Controller;
+        
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        Zero.Connect(this.Owner, Events.Stun, this.OnStun);
+        //Console.WriteLine(this.KeyAttack);
+    }
+
+    function OnStun(event : ZilchEvent)
+    {
+        this.Stunned = true;
+        var seq = Action.Sequence(this.Owner.Actions);
+        Action.Delay(seq, 3.0);
+        Action.Call(seq, this.UnStun);
+    }
+    
+    function UnStun()
+    {
+        this.Stunned = false;
+        this.Owner.Sprite.SpriteSource = this.Class;
+        this.Owner.Transform.Scale = this.CurrentScale;
+        this.Owner.BoxCollider.Size = this.CurrentCollide;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        //Console.WriteLine(this.AttackAnimationActive);
+        //Console.WriteLine(this.Owner.Sprite.SpriteSource.Name);
+        
+        if(!this.AttackAnimationActive && this.Stunned == false)
+        {
+            
+            //else if(this.Controller.LeftStick == Real2.Zero)/*Zero.Keyboard.KeyIsDown(this.KeyLeft) == false && Zero.Keyboard.KeyIsDown(this.KeyRight) == false && Zero.Keyboard.KeyIsDown(this.KeyUp) == false && Zero.Keyboard.KeyIsDown(this.KeyDown) == false)*/
+            
+            if(Zero.Keyboard.KeyIsDown(this.KeyRight) && Zero.Keyboard.KeyIsDown(Keys.Space))
+            {
+                //this.Owner.Sprite.SpriteSource = this.ClassJump;
+                
+            }
+            
+            else if(Zero.Keyboard.KeyIsDown(this.KeyLeft) && Zero.Keyboard.KeyIsDown(Keys.Space))
+            {
+                //this.Owner.Sprite.SpriteSource = this.ClassJump;
+                this.Owner.Sprite.FlipX = true;
+
+            }
+            
+            
+           
+            
+            else if(Zero.Keyboard.KeyIsDown(Keys.Space) )
+            {
+                //this.Owner.Sprite.SpriteSource = this.ClassJump;
+            }
+            
+            else if(Zero.Keyboard.KeyIsDown(this.KeyLeft) && this.Owner.Sprite.SpriteSource != this.ClassWalkAnimation
+            && this.Owner.PlayerController.NearBuilding != true)
+            {
+                this.Owner.Sprite.AnimationActive = true;
+                this.Owner.Sprite.SpriteSource = this.ClassWalkAnimation;
+                this.Owner.Sprite.FlipX = false;
+            }
+             
+            else if(Zero.Keyboard.KeyIsDown(this.KeyRight) && this.Owner.Sprite.SpriteSource != this.ClassWalkAnimation 
+            && this.Owner.PlayerController.NearBuilding != true)
+            {
+                this.Owner.Sprite.AnimationActive = true;
+                this.Owner.Sprite.SpriteSource = this.ClassWalkAnimation;
+                this.Owner.Sprite.FlipX = false;
+           
+            }
+            else if(Zero.Keyboard.KeyIsUp(this.KeyLeft) && Zero.Keyboard.KeyIsUp(this.KeyRight) && Zero.Keyboard.KeyIsUp(Keys.Space) 
+                 && Zero.Keyboard.KeyIsUp(this.KeyAttack) && Zero.Keyboard.KeyIsUp(this.KeyUp) && Zero.Keyboard.KeyIsUp(this.KeyDown))
+            {
+                if(this.Owner.PlayerController.NearBuilding != true && this.Owner.Sprite.SpriteSource != this.Class)
+                {
+                    this.Owner.Sprite.SpriteSource = this.Class;
+                }
+                else if(this.Owner.PlayerController.NearBuilding
+                 && this.Owner.Sprite.SpriteSource != this.ClimbStill)
+                {
+                    this.Owner.Sprite.SpriteSource = this.ClimbStill;
+                    if(this.Owner.PlayerController.Controller == 2)
+                    {
+                        this.Owner.Transform.Scale = Real3(7.0, 5.5, 1.0);
+                        this.Owner.BoxCollider.Size = Real3(0.95, 2.0, 1.0);
+                    }
+                }
+                this.Owner.Sprite.AnimationActive = true;
+                //this.Owner.Sprite.FlipX = false;
+            }
+            
+            else if(Zero.Keyboard.KeyIsDown(this.KeyUp) && this.Owner.PlayerController.NearBuilding
+             && this.Owner.Sprite.SpriteSource != this.ClimbAnim)
+            {
+                this.Owner.Sprite.SpriteSource = this.ClimbAnim;
+                if(this.Owner.Transform.Scale == this.CurrentScale && this.Controller == 1)
+                {
+                    this.Owner.Transform.Scale = Real3(5.0, 6.0, 1.0);
+                    this.Owner.BoxCollider.Size = Real3(1.5, 1.3, 1.0);
+                }
+                else if(this.Owner.PlayerController.Controller == 2)
+                {
+                    this.Owner.Transform.Scale = Real3(7.0, 6.0, 1.0);
+                    this.Owner.BoxCollider.Size = Real3(0.95, 2.0, 1.0);
+                }
+            }
+            
+            else if(Zero.Keyboard.KeyIsDown(this.KeyDown) && this.Owner.PlayerController.NearBuilding
+             && this.Owner.Sprite.SpriteSource != this.ClimbAnim)
+            {
+                this.Owner.Sprite.SpriteSource = this.ClimbAnim;
+                if(this.Owner.Transform.Scale == this.CurrentScale && this.Controller == 1)
+                {
+                    this.Owner.Transform.Scale = Real3(5.0, 6.0, 1.0);
+                    this.Owner.BoxCollider.Size = Real3(1.5, 1.3, 1.0);
+                }
+                else if(this.Owner.PlayerController.Controller == 2)
+                {
+                    this.Owner.Transform.Scale = Real3(7.0, 6.0, 1.0);
+                    this.Owner.BoxCollider.Size = Real3(0.95, 2.0, 1.0);
+                }
+            }
+            
+            if(Zero.Keyboard.KeyIsDown(this.KeyLeft) )//&& this.Owner.SweptController.Grounded)
+            {
+                this.Owner.Sprite.FlipX = true;
+                if(this.Owner.Transform.Scale != this.CurrentScale && this.Controller == 1
+                && this.Owner.PlayerController.NearBuilding == false)
+                {
+                    this.Owner.Transform.Scale = this.CurrentScale;
+                }
+                if(this.Owner.Transform.Scale == this.CurrentScale && this.Controller == 2)
+                {
+                    this.Owner.Transform.Scale = Real3(6.0, this.CurrentScale.Y, 1.0);
+                    this.Owner.BoxCollider.Size = Real3(1.0, 2.0, 1.0);
+                }
+            }
+            
+            
+            
+            if(Zero.Keyboard.KeyIsDown(this.KeyRight))
+            {
+                this.Owner.Sprite.FlipX = false;
+                if(this.Owner.Transform.Scale != this.CurrentScale && this.Controller == 1
+                && this.Owner.PlayerController.NearBuilding == false)
+                {
+                    this.Owner.Transform.Scale = this.CurrentScale;
+                }
+                if(this.Owner.Transform.Scale == this.CurrentScale && this.Controller == 2)
+                {
+                    this.Owner.Transform.Scale = Real3(6.0, this.CurrentScale.Y, 1.0);
+                    this.Owner.BoxCollider.Size = Real3(1.0, 2.0, 1.0);
+                }
+            }
+            //=====================================
+            //STUN ON GROUND
+            //=====================================
+            if(Zero.Keyboard.KeyIsPressed(this.KeyStun) && !this.AttackAnimationActive && !this.Owner.PlayerController.NearBuilding)
+            {
+                this.Owner.Sprite.SpriteSource = this.ClassAttack;
+                this.CurrentTrans = this.Owner.Transform.Translation;
+                if(this.Owner.PlayerController.Controller == 1)
+                {
+                    this.Owner.Transform.Scale = Real3(6.0, this.CurrentScale.Y + 1.0, 1.0);
+                    this.Owner.BoxCollider.Size = Real3(1.0, this.CurrentCollide.Y -0.18, 1.0);
+                }
+                else if(this.Owner.PlayerController.Controller == 2)
+                {
+                    if(this.Owner.Sprite.FlipX)
+                    {
+                        this.Owner.Transform.Translation -= Real3(2.0, 0.0, 0.0);
+                    }
+                    else if(!this.Owner.Sprite.FlipX)
+                    {
+                        this.Owner.Transform.Translation += Real3(2.0, 0.0, 0.0);
+                    }
+                    this.Owner.Transform.Scale = Real3(10.0, this.CurrentScale.Y + 1.2, 1.0);
+                    this.Owner.BoxCollider.Size = Real3(0.9, 1.6, 1.0);
+                }
+                this.AttackAnimationActive = true;
+                this.Owner.PlayerController.CanIMove = false;
+            }
+            
+            //=====================================
+            //ATTACK ON BUILDING 
+            //=====================================
+            else if(Zero.Keyboard.KeyIsPressed(this.KeyAttack) && this.Owner.PlayerController.NearBuilding && !this.AttackAnimationActive)
+            {
+                this.Space.SoundSpace.PlayCue(this.PunchNoise);
+                this.Owner.Sprite.SpriteSource = this.ClimbAttack;
+                this.Owner.PlayerController.CanIMove = false; 
+                this.AttackAnimationActive = true;
+                if(this.Owner.PlayerController.Controller == 2)
+                {
+                    this.Owner.Transform.Scale = Real3(9.0, this.CurrentScale.Y + 1, 1.0);
+                    this.Owner.BoxCollider.Size = Real3(1.0, 2.0, 1.0);
+                }
+            }
+        }
+        
+        
+        if(this.AttackAnimationActive && this.Owner.Sprite.SpriteSource == this.ClassAttack && this.Owner.Sprite.CurrentFrame == 59 && this.Stunned != true)
+        {
+            this.AttackAnimationActive = false;
+            this.Owner.Sprite.SpriteSource = this.Class;
+            this.Owner.PlayerController.CanIMove = true;
+            this.Owner.BoxCollider.Size = this.CurrentCollide;
+            this.Owner.Transform.Scale = this.CurrentScale;
+            if(this.Controller == 2)
+            {
+                
+                if(this.Owner.Sprite.FlipX)
+                    {
+                        this.Owner.Transform.Translation += Real3(2.0, 0.0, 0.0);
+                    }
+                    else if(!this.Owner.Sprite.FlipX)
+                    {
+                        this.Owner.Transform.Translation -= Real3(2.0, 0.0, 0.0);
+                    }
+            }
+        }
+        
+        if(this.AttackAnimationActive && this.Owner.Sprite.SpriteSource == this.ClimbAttack && this.Owner.Sprite.CurrentFrame == 36 && this.Stunned != true)
+        {
+            
+        }
+        
+        if(this.AttackAnimationActive && this.Owner.Sprite.SpriteSource == this.ClimbAttack && this.Owner.Sprite.CurrentFrame == 59 && this.Stunned != true)
+        {
+            this.AttackAnimationActive = false;
+            this.Owner.Transform.Scale = this.CurrentScale;
+            this.Owner.Sprite.SpriteSource = this.ClimbStill;
+            this.Owner.PlayerController.CanIMove = true;
+            if(this.Owner.PlayerController.Controller == 2)
+            {
+                this.Owner.Transform.Scale = Real3(7.0, 5.5, 1.0);
+                this.Owner.BoxCollider.Size = Real3(0.95, 2.0, 1.0);
+            }
+        }
+        
+        if(this.Owner.Sprite.SpriteSource == this.ClassJump && this.Stunned != true)
+        {
+            if(this.Owner.Sprite.CurrentFrame > 12)
+            {
+                this.Owner.Sprite.AnimationActive = false;
+            }
+            //Changing Scale while Jumping
+            if(this.Owner.Transform.Scale == this.CurrentScale && this.Controller == 1)
+            {
+                this.Owner.Transform.Scale = Real3(5.0, 6.0, 1.0);
+                this.Owner.BoxCollider.Size = Real3(1.5, 1.3, 1.0);
+            }
+        }
+        
+        else if(this.Owner.Sprite.SpriteSource != this.ClassJump && this.Owner.Sprite.SpriteSource != this.ClimbAnim
+         && this.Owner.Transform.Scale != this.CurrentScale && Zero.Keyboard.KeyIsUp(this.KeyRight) && Zero.Keyboard.KeyIsUp(this.KeyLeft)
+         && this.Owner.Sprite.SpriteSource != this.ClassAttack && this.Stunned != true)
+        {
+            if(this.Controller == 1)
+            {
+                this.Owner.Transform.Scale = this.CurrentScale;
+                this.Owner.BoxCollider.Size = Real3(1.5, 1.5, 1.0);
+            }
+            else if(this.Controller == 2)
+            {
+                if(this.Owner.Sprite.SpriteSource != this.ClimbStill && this.Owner.Sprite.SpriteSource != this.ClimbAnim &&
+                this.Owner.Sprite.SpriteSource != this.ClimbAttack)
+                {
+                    this.Owner.Transform.Scale = this.CurrentScale;
+                    this.Owner.BoxCollider.Size = Real3(1.5, 2.0, 1.0);
+                }
+                
+            }
+        }
+        
+        if(this.Stunned && this.Owner.Sprite.SpriteSource != this.StunnedAnim)
+        {
+            this.Owner.Sprite.SpriteSource = this.StunnedAnim;
+            if(this.Owner.PlayerController.Controller == 2)
+            {
+                this.Owner.Transform.Scale = Real3(7.0, this.CurrentScale.Y + 1, 1.0);
+                this.Owner.BoxCollider.Size = Real3(1.0, 1.9, 1.0);
+            }
+        }
+        
+   
+    }
+}

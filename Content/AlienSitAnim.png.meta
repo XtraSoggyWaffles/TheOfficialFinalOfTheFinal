@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "AlienSitAnim",
+		uint64 ResourceId = 5a49a1b918a3a4af,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 268,
+		uint FrameSizeY = 194,
+		uint FrameCount = 62,
+		float FrameDelay = 0.015625,
+		float OriginX = 134,
+		float OriginY = 97,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

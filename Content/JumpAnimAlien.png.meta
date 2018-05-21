@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "JumpAnimAlien",
+		uint64 ResourceId = 5a4dc68718e45bf8,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 321,
+		uint FrameSizeY = 275,
+		uint FrameCount = 15,
+		float FrameDelay = 0.010416667,
+		float OriginX = 160.5,
+		float OriginY = 137.5,
+		float PixelsPerUnit = 32,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

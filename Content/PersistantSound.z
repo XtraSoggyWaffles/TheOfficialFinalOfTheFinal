@@ -1,0 +1,230 @@
+class PersistantSound : ZilchComponent
+{
+    //the soundcue to be playeyed persistently in the main menu, how to play, and credits
+    [Property]
+    var BackgroundMenuMusic : SoundCue;
+    
+    //soundcue to be played on game 
+    [Property]
+    var BackgroundGameMusic : SoundCue;
+    
+    //Soundcue to be played on intro level
+    [Property]
+    var BackgroundIntroMusic : SoundCue;
+    
+    //Soundcue to be played on house level
+    [Property]
+    var BackgroundHouseMusic : SoundCue;
+    
+    //the space archetype by which the new music space will be created
+    [Property]
+    var BackgroundMusicSpaceArch : Archetype;
+    
+    //level to load on the new music space
+    [Property]
+    var MusicLevel : Level = null;
+    
+    // a refereance for the menu levels(level, how to play, credits) music space
+    var BackgroundMenuMusicSpace : Space;
+    
+    //a reference for the game levels music space
+    var BackgroundGameMusicSpace : Space;
+    
+    var BackgroundIntroMusicSpace : Space;
+    
+    var BackgroundHouseMusicSpace : Space;
+    
+    //value at which to increase or decrease the volume of all cues on soundspace
+    [Property]
+    var VolumeScalar : Real = 0.0;
+    
+    //the value by which to increase or decrease pitch of all cues on soundspace
+    [Property]
+    var PitchScalar : Real = 0.0;
+    
+    
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        //connect to event dispatched when level is started
+        Zero.Connect(this.Space, Events.LevelStarted, this.OnLevelStarted);
+        
+        //connect to the keydown event dispatched on to the keyboard
+        Zero.Connect(Zero.Keyboard, Events.KeyDown, this.OnKeyDown);
+    }
+
+    // response function called when the levelstarted event is heard
+    function OnLevelStarted(event : GameEvent)
+    {
+        //check to see if we are in the game level
+        if(event.LevelName == "GameLevel")
+        {
+            if(this.BackgroundIntroMusicSpace != null)
+            {
+                this.BackgroundIntroMusicSpace.Destroy();
+            }
+            //if the space for the menu music exists
+            if(this.BackgroundMenuMusicSpace != null)
+            {
+                //destroy it so we dont have two different cues overlapping
+                this.BackgroundMenuMusicSpace.Destroy();
+            }
+            
+            //safety measure to make sure we dont make a copy of the same space
+            //will most likely never be true
+            if(this.BackgroundGameMusicSpace != null)
+            {
+                Console.WriteLine("You almost created the same space twice??!!?!?");
+                this.BackgroundGameMusicSpace.Destroy();
+            }
+            
+            //create a new space for the background game music
+            this.BackgroundGameMusicSpace = this.GameSession.CreateSpace(this.BackgroundMusicSpaceArch);
+            
+            //load the music level so we can play the background music
+            this.BackgroundGameMusicSpace.LoadLevel(this.MusicLevel);
+            
+            //play the background game music cue from the sound space
+            this.BackgroundGameMusicSpace.SoundSpace.PlayCue(this.BackgroundGameMusic);
+        }
+        
+        if(event.LevelName == "GameLevelAfterHouseEntered")
+        {
+            if(this.BackgroundIntroMusicSpace != null)
+            {
+                this.BackgroundIntroMusicSpace.Destroy();
+            }
+            //if the space for the menu music exists
+            if(this.BackgroundMenuMusicSpace != null)
+            {
+                //destroy it so we dont have two different cues overlapping
+                this.BackgroundMenuMusicSpace.Destroy();
+            }
+            
+            //safety measure to make sure we dont make a copy of the same space
+            //will most likely never be true
+            if(this.BackgroundGameMusicSpace != null)
+            {
+                Console.WriteLine("You almost created the same space twice??!!?!?");
+                this.BackgroundGameMusicSpace.Destroy();
+            }
+            
+            //create a new space for the background game music
+            this.BackgroundGameMusicSpace = this.GameSession.CreateSpace(this.BackgroundMusicSpaceArch);
+            
+            //load the music level so we can play the background music
+            this.BackgroundGameMusicSpace.LoadLevel(this.MusicLevel);
+            
+            //play the background game music cue from the sound space
+            this.BackgroundGameMusicSpace.SoundSpace.PlayCue(this.BackgroundGameMusic);
+        }
+        
+        else if(event.LevelName == "IntroCutscene")
+        {
+            //if the space for the menu music exists
+            if(this.BackgroundMenuMusicSpace != null)
+            {
+                //destroy it so we dont have two different cues overlapping
+                this.BackgroundMenuMusicSpace.Destroy();
+            }
+            
+            //safety measure to make sure we dont make a copy of the same space
+            //will most likely never be true
+            if(this.BackgroundGameMusicSpace != null)
+            {
+                this.BackgroundGameMusicSpace.Destroy();
+            }
+            
+            if(this.BackgroundIntroMusicSpace != null)
+            {
+                this.BackgroundIntroMusicSpace.Destroy();
+            }
+            
+        }
+        
+        else if (event.LevelName == "MenuScreen")
+        {
+            //if the space for the games music exists
+            if(this.BackgroundGameMusicSpace != null)
+            {
+                //destroy it so we dont have two different cues overlapping
+                this.BackgroundGameMusicSpace.Destroy();
+            }
+            
+            if(this.BackgroundIntroMusicSpace != null)
+            {
+                this.BackgroundIntroMusicSpace.Destroy();
+            }
+            
+            //if there is currently no space for the menus background music
+            if(this.BackgroundMenuMusicSpace == null)
+            {
+                //Create the space and assign to our menu music space variable
+                this.BackgroundMenuMusicSpace = this.GameSession.CreateSpace(this.BackgroundMusicSpaceArch);
+                
+                //load the music level so we can play the menu music
+                this.BackgroundMenuMusicSpace.LoadLevel(this.MusicLevel);
+                
+                //play the menu background music cue from sound space
+                this.BackgroundMenuMusicSpace.SoundSpace.PlayCue(this.BackgroundMenuMusic);
+            }
+        }
+    }
+    
+    function OnKeyDown(event : KeyboardEvent)
+    {
+        if(event.Key == Keys.Right)
+        {
+            // if the background menu music space exists
+            if(this.BackgroundMenuMusicSpace != null)
+            {
+                //increase the volume of the background menu music by the volume scalar
+                this.BackgroundMenuMusicSpace.SoundSpace.Volume += this.VolumeScalar;
+            }
+            
+            else if(this.BackgroundGameMusicSpace != null)
+            {
+                //increase the volume of the background menu music by the volume scalar
+                this.BackgroundGameMusicSpace.SoundSpace.Volume += this.VolumeScalar;
+            }
+        }
+        
+        else if(event.Key == Keys.Left)
+        {
+            // if the background menu music space exists
+            if(this.BackgroundMenuMusicSpace != null)
+            {
+                //increase the volume of the background menu music by the volume scalar
+                this.BackgroundMenuMusicSpace.SoundSpace.Volume -= this.VolumeScalar;
+            }
+            
+            else if(this.BackgroundGameMusicSpace != null)
+            {
+                //increase the volume of the background menu music by the volume scalar
+                this.BackgroundGameMusicSpace.SoundSpace.Volume -= this.VolumeScalar;
+            }
+        }
+        
+       
+        
+        if(event.Key == Keys.Space)
+        {
+            // if the background menu music space exists
+            if(this.BackgroundMenuMusicSpace != null)
+            {
+                
+                this.BackgroundMenuMusicSpace.SoundSpace.Pause = !this.BackgroundMenuMusicSpace.SoundSpace.Pause;
+            }
+            
+            else if(this.BackgroundGameMusicSpace != null)
+            {
+                this.BackgroundGameMusicSpace.SoundSpace.Pause = !this.BackgroundGameMusicSpace.SoundSpace.Pause;
+            }
+        }
+        
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

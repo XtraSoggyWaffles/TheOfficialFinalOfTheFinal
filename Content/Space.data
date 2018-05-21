@@ -1,0 +1,60 @@
+Space = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Archetyped = 
+	{
+		string Name = "554cea0f94af6dc4:Space",
+	},
+	TimeSpace = 
+	{
+		float MaxDt = 0.300000012,
+		float MinDt = 9.99999997e-07,
+		float TimeScale = 1,
+		uint TimeMode = 0,
+		uint StepCount = 1,
+	},
+	GraphicsSpace = 
+	{
+		TransparentSort TransparentSort = ViewDepth,
+		string SpriteLayerOrder = "5a49a601fb885890:LayersxD",
+		bool UseRandomSeed = false,
+		uint RandomSeed = 0,
+	},
+	ActionSpace = 
+	{
+	},
+	PhysicsSpace = 
+	{
+		bool AllowSleep = true,
+		bool Mode2D = true,
+		bool Deterministic = true,
+		uint SubStepCount = 1,
+		string CollisionFilterName = "5a70c5284a05f82e:Idk",
+		string PhysicsSolverConfigName = "5391c496ad3459b8:PostStabilization",
+		string DynamicBroadphaseType = "DynamicAabbTree",
+		string StaticBroadphaseType = "StaticAabbTree",
+	},
+	SoundSpace = 
+	{
+	},
+	ReactiveSpace = 
+	{
+	},
+	SpaceScore = 
+	{
+	},
+	PersistantSound = 
+	{
+		string BackgroundMenuMusic = "5a49ad9fdb6a88ed:MenuMusicPlaceHolder",
+		string BackgroundGameMusic = "5a4cc84109a3afd4:Silence",
+		string BackgroundIntroMusic = "",
+		string BackgroundHouseMusic = "",
+		string BackgroundMusicSpaceArch = "5a49d212c2272b7a:MusicSpace",
+		string MusicLevel = "5a49ae698f2328e0:MusicLevel",
+		float VolumeScalar = 0,
+		float PitchScalar = 0,
+	},
+},

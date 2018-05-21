@@ -1,0 +1,20 @@
+ImageContent = 
+{
+	SpriteSourceBuilder = 
+	{
+		string Name = "StillAnimAlien",
+		uint64 ResourceId = 5a4dc1546e9db505,
+		uint64 AtlasId = 5274cf95e4a661fd,
+		uint FrameSizeX = 311,
+		uint FrameSizeY = 211,
+		uint FrameCount = 62,
+		float FrameDelay = 0.010416667,
+		float OriginX = 155.5,
+		float OriginY = 105.5,
+		float PixelsPerUnit = 64,
+		bool Smoothing = false,
+		bool Looping = true,
+		Vec4 Slices = [0, 0, 0, 0],
+		SpriteFill Fill = Stretch,
+	},
+},

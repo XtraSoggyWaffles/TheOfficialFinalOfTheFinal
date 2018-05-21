@@ -1,0 +1,57 @@
+Cog = 
+{
+	LinkId = 
+	{
+		uint Id = 1,
+	},
+	Named = 
+	{
+		string Name = "GlassShard",
+	},
+	Archetyped = 
+	{
+		string Name = "5bb6feaff49a6bf2:Pebble",
+	},
+	Transform = 
+	{
+		Vec3 Translation = [0, 21.3333492, 0],
+		Vec3 Scale = [2, 2, 1],
+		Quat Rotation = [0, 0, 0.582478881, 0.812845886],
+	},
+	Sprite = 
+	{
+		bool Visible = true,
+		bool VisibilityCulling = true,
+		bool VisibilityEvents = true,
+		bool CastShadows = false,
+		Vec4 Color = [1, 1, 1, 1],
+		BlendMode BlendMode = Alpha,
+		SpriteGeometryMode GeometryMode = ZPlane,
+		string SpriteLayer = "52ad5fa30d7fcd50:DefaultSpriteLayer",
+		string SpriteSource = "5bb6feb4f6194d38:Pebble",
+		bool RenderMask = false,
+		bool FlipX = false,
+		bool FlipY = false,
+		bool AnimationActive = true,
+		float AnimationSpeed = 1,
+		uint StartFrame = 0,
+	},
+	TimedDeath = 
+	{
+		float Lifetime = 3,
+		bool SendsDeathEvent = false,
+		bool AutoDestroy = true,
+	},
+	RigidBody = 
+	{
+		bool Static = false,
+		bool Asleep = false,
+		bool Kinematic = false,
+		bool RotationLocked = false,
+		bool Mode2D = false,
+		bool AllowSleep = true,
+		bool Inherit2DMode = true,
+		Vec3 Velocity = [0, 5, 0],
+		Vec3 AngularVelocity = [0, 0, 15],
+	},
+},

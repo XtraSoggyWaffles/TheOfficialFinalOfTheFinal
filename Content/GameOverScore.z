@@ -1,0 +1,23 @@
+class GameOverScore : ZilchComponent
+{
+    [Property]
+    var Player : Integer = 0;
+    function Initialize(init : CogInitializer)
+    {
+        //Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        if(this.Player == 1)
+        {
+            
+            this.Owner.SpriteText.Text = "Score : `this.Space.SpaceScore.Score`";
+        }
+        else if(this.Player == 2)
+        {
+            
+            this.Owner.SpriteText.Text = "Score : `this.Space.SpaceScore.Score2`";
+        }
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+    }
+}

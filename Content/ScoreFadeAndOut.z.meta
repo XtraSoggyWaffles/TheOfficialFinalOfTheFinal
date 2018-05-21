@@ -1,0 +1,8 @@
+TextContent = 
+{
+	ZilchScriptBuilder = 
+	{
+		string Name = "ScoreFadeAndOut",
+		uint64 ResourceId = 5a4058c22421273f,
+	},
+},

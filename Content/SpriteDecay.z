@@ -1,0 +1,33 @@
+class SpriteDecay : ZilchComponent
+{
+    var ScoreText : Cog = null;
+    var Score1 : Boolean = false;
+    var Score2 : Boolean = false;
+    var Score3 : Boolean = false;
+    function Initialize(init : CogInitializer)
+    {
+        this.ScoreText = this.Space.FindObjectByName("Score");
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.Owner.Health.CurrentHealth <= 20 && !this.Score1)
+        {
+            this.ScoreText.Score.Score += 10;
+            this.Score1 = true;
+            this.Owner.Sprite.CurrentFrame = 1;
+        }
+        if(this.Owner.Health.CurrentHealth <= 10 && !this.Score2)
+        {
+            this.ScoreText.Score.Score += 10;
+            this.Score2 = true;
+            this.Owner.Sprite.CurrentFrame = 2;
+        }
+        if(this.Owner.Health.CurrentHealth <= 0 && !this.Score3)
+        {
+            this.ScoreText.Score.Score += 15;
+            this.Score3 = true;
+        }
+    }
+}

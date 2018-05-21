@@ -1,0 +1,27 @@
+class BuildingDamage : ZilchComponent
+{
+    var Children : Array[Cog] = new Array[Cog]();
+    var NumChildren : Integer = 0;
+    var OriginalNumChildren : Integer = 0;
+    [Property] var PercentLeftToDestroy : Integer = 50;
+    [Property]
+    var BuildingOffset : Real;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        foreach (var child in this.Owner.Children)
+        {
+            this.Children.Add(child);
+        }
+        this.NumChildren = this.Children.Count;
+        this.OriginalNumChildren = this.NumChildren;
+    }
+
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        if(this.NumChildren < this.OriginalNumChildren * (this.PercentLeftToDestroy / 100.0))
+        {
+            this.Owner.Destroy();
+        }
+    }
+}

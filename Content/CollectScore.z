@@ -1,0 +1,18 @@
+class CollectScore : ZilchComponent
+{
+    [Property]
+    var ScoreText : CogPath = null;
+    function Initialize(init : CogInitializer)
+    {
+        Zero.Connect(this.Owner, Events.CollisionStarted, this.OnCollisionStarted);
+    }
+
+    function OnCollisionStarted(event : CollisionEvent)
+    {
+        if(event.OtherObject.Name == "PlayerOne")
+        {
+            this.ScoreText.Cog.Score.Score += 10;
+            this.Owner.Destroy();
+        }
+    }
+}

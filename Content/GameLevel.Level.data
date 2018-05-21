@@ -124,7 +124,7 @@ Level =
 		},
 		Transform = 
 		{
-			Vec3 Translation = [-18.0612259, 1.24580181, 50],
+			Vec3 Translation = [4.43597269, 1.24580181, 50],
 			Vec3 Scale = [1, 1, 1],
 			Quat Rotation = [-0, -1.09278471e-08, 0, 1],
 		},
@@ -136,7 +136,7 @@ Level =
 			float FieldOfView = 45,
 			float NearPlane = 0.5,
 			float FarPlane = 500,
-			float Size = 67.0320358,
+			float Size = 74.0818481,
 		},
 		EditorCameraController = 
 		{
@@ -144,7 +144,7 @@ Level =
 			float LookDistance = 50,
 			float VerticalAngle = 0,
 			float HorizontalAngle = 0,
-			Vec3 LookTarget = [-18.0612259, 1.24580181, 0],
+			Vec3 LookTarget = [4.43597269, 1.24580181, 0],
 			float MoveSensitivity = 1,
 		},
 		EditorRenderer = 
@@ -168,7 +168,7 @@ Level =
 		},
 		Transform = 
 		{
-			Vec3 Translation = [-50.4058113, -15.3845901, 0],
+			Vec3 Translation = [14.0113068, -13.6896715, 0],
 			Vec3 Scale = [5, 5, 1],
 			Quat Rotation = [0, 0, 0, 1],
 		},
@@ -2344,6 +2344,24 @@ Level =
 		Transform = 
 		{
 			Vec3 Translation = [1.96734238, 2.5, 0],
+			Vec3 Scale = [1, 1, 1],
+			Quat Rotation = [0, 0, 0, 1],
+		},
+		Named = 
+		{
+			string Name = "Building",
+		},
+	},
+	ArchetypeInstance = 
+	{
+		string Name = "5bb558ff59251bdd:Building2",
+		LinkId = 
+		{
+			uint Id = 47,
+		},
+		Transform = 
+		{
+			Vec3 Translation = [33.4364357, 2.5, 0],
 			Vec3 Scale = [1, 1, 1],
 			Quat Rotation = [0, 0, 0, 1],
 		},
